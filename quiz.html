@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine's Day Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>General Knowledge Quiz 💕</h2>
+    <p id="question"></p>
+    <button id="joker-btn" onclick="useJoker()">Use Joker ❤️ (Remaining: <span id="joker-count">3</span>)</button>
+    <div id="options"></div>
+    <p id="result"></p>
+    <p id="total">Date Budget: €0</p>
+    <button id="next-btn" onclick="nextQuestion()" disabled>Next Question ➡️</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Mars", "Venus", "Jupiter", "Saturn"],
+        answer: "Mars",
+        value: 10
+      },
+      {
+        question: "Who painted the Mona Lisa?",
+        options: ["Michelangelo", "Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh"],
+        answer: "Leonardo da Vinci",
+        value: 10
+      },
+      {
+        question: "In which year did the Berlin Wall fall?",
+        options: ["1987", "1989", "1991", "1993"],
+        answer: "1989",
+        value: 10
+      },
+      {
+        question: "Which language is primarily spoken in Brazil?",
+        options: ["Spanish", "Portuguese", "French", "English"],
+        answer: "Portuguese",
+        value: 10
+      },
+      {
+        question: "How many federal states does Germany have?",
+        options: ["14", "15", "16", "17"],
+        answer: "16",
+        value: 10
+      },
+      {
+        question: "What is the largest mammal on Earth?",
+        options: ["Elephant", "Blue Whale", "Great White Shark", "Giraffe"],
+        answer: "Blue Whale",
+        value: 10
+      },
+      {
+        question: "Which vitamin is produced when a person is exposed to sunlight?",
+        options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+        answer: "Vitamin D",
+        value: 10
+      },
+      {
+        question: "How many planets are in our solar system?",
+        options: ["7", "8", "9", "10"],
+        answer: "8",
+        value: 10
+      },
+      {
+        question: "Who wrote the play 'Faust'?",
+        options: ["Johann Wolfgang von Goethe", "Friedrich Schiller", "Thomas Mann", "Franz Kafka"],
+        answer: "Johann Wolfgang von Goethe",
+        value: 10
+      },
+      {
+        question: "On which continent is the Sahara Desert located?",
+        options: ["Asia", "South America", "Africa", "Australia"],
+        answer: "Africa",
+        value: 10
+      },
+      // Fragen 11-15: Schwerere Fragen, jeweils €20
+      {
+        question: "What is the chemical symbol for potassium?",
+        options: ["P", "K", "Pt", "Po"],
+        answer: "K",
+        value: 20
+      },
+      {
+        question: "Which country has the longest coastline in the world?",
+        options: ["Russia", "Canada", "Australia", "Indonesia"],
+        answer: "Canada",
+        value: 20
+      },
+      {
+        question: "Who is known as the 'Father of Computer Science'?",
+        options: ["Alan Turing", "Charles Babbage", "Bill Gates", "Tim Berners-Lee"],
+        answer: "Alan Turing",
+        value: 20
+      },
+      {
+        question: "What is the capital city of Australia?",
+        options: ["Sydney", "Melbourne", "Canberra", "Perth"],
+        answer: "Canberra",
+        value: 20
+      },
+      {
+        question: "Which physicist developed the theory of general relativity?",
+        options: ["Isaac Newton", "Albert Einstein", "Nikola Tesla", "Niels Bohr"],
+        answer: "Albert Einstein",
+        value: 20
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let total = 0;
+    let jokers = 3;
+    let answered = false;
+
+    function displayQuestion() {
+      const questionElement = document.getElementById('question');
+      const optionsElement = document.getElementById('options');
+      const resultElement = document.getElementById('result');
+      const totalElement = document.getElementById('total');
+      const nextBtn = document.getElementById('next-btn');
+      const jokerCount = document.getElementById('joker-count');
+      
+      questionElement.textContent = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex].question}`;
+      optionsElement.innerHTML = '';
+      
+      questions[currentQuestionIndex].options.forEach((option) => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.onclick = () => checkAnswer(button, option);
+        optionsElement.appendChild(button);
+      });
+
+      resultElement.textContent = '';
+      totalElement.textContent = `Date Budget: €${total}`;
+      nextBtn.disabled = true;
+      answered = false;
+      jokerCount.textContent = jokers;
+    }
+
+    function checkAnswer(button, option) {
+      const resultElement = document.getElementById('result');
+      const nextBtn = document.getElementById('next-btn');
+      if (answered) return;
+      answered = true;
+
+      if (option === questions[currentQuestionIndex].answer) {
+        resultElement.textContent = 'Correct! 🎉';
+        total += questions[currentQuestionIndex].value;
+        button.classList.add('correct');
+      } else {
+        resultElement.textContent = `Incorrect! The correct answer was "${questions[currentQuestionIndex].answer}".`;
+        button.classList.add('incorrect');
+        highlightCorrectAnswer();
+      }
+      document.getElementById('total').textContent = `Date Budget: €${total}`;
+      nextBtn.disabled = false;
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showFinalResult();
+      }
+    }
+
+    function useJoker() {
+      if (jokers > 0 && !answered) {
+        jokers--;
+        const optionsElement = document.getElementById('options');
+        const buttons = optionsElement.getElementsByTagName('button');
+        let removed = 0;
+        const incorrectOptions = [];
+        Array.from(buttons).forEach(button => {
+          if (button.textContent !== questions[currentQuestionIndex].answer) {
+            incorrectOptions.push(button);
+          }
+        });
+        while (removed < 2 && incorrectOptions.length > 0) {
+          const index = Math.floor(Math.random() * incorrectOptions.length);
+          incorrectOptions[index].style.display = 'none';
+          incorrectOptions.splice(index, 1);
+          removed++;
+        }
+        document.getElementById('joker-count').textContent = jokers;
+        if (jokers === 0) {
+          document.getElementById('joker-btn').disabled = true;
+        }
+      } else if (jokers === 0) {
+        alert('No Jokers left!');
+      }
+    }
+
+    function highlightCorrectAnswer() {
+      const optionsElement = document.getElementById('options');
+      const buttons = optionsElement.getElementsByTagName('button');
+      Array.from(buttons).forEach(button => {
+        if (button.textContent === questions[currentQuestionIndex].answer) {
+          button.classList.add('correct');
+        }
+      });
+    }
+
+    function showFinalResult() {
+      const container = document.querySelector('.container');
+      container.innerHTML = `
+        <h2>Quiz Completed! 🎉</h2>
+        <p>Thank you for playing, my love. You have earned a Date Budget of <strong>€${total}</strong>!</p>
+        <p>Additionally, you've won an in-house family cocktail night tonight with Mason and a game night! 🍹🎲</p>
+        <h3>Choose our next couple's date:</h3>
+        <div id="date-options">
+          <button onclick="openLink('sushi')">Sushi Night 🍣</button>
+          <button onclick="openLink('steakhouse')">Steakhouse Dinner 🥩</button>
+          <button onclick="openLink('burger')">Burger Feast 🍔</button>
+          <button onclick="openLink('korean')">Korean BBQ 🇰🇷</button>
+        </div>
+      `;
+    }
+
+    function openLink(choice) {
+      let url = '';
+      switch(choice) {
+        case 'sushi':
+          url = 'https://fuji-sushibar.de/';
+          break;
+        case 'steakhouse':
+          url = 'https://www.grill16-heidelberg.de/en/';
+          break;
+        case 'burger':
+          url = 'https://www.instagram.com/joe.molese.117/';
+          break;
+        case 'korean':
+          url = 'https://www.clubkaiser.de/korean-bbq/';
+          break;
+      }
+      window.open(url, '_blank');
+    }
+
+    displayQuestion();
+  </script>
+</body>
+</html>

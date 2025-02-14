@@ -1,0 +1,90 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #FFFFFF; /* White background */
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    width: 80%;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+    padding: 50px 20px;
+  }
+  
+  h1, h2, h3 {
+    color: #FE3C72; /* Tinder's pink-red */
+  }
+  
+  p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  
+  button {
+    padding: 15px 25px;
+    margin: 10px 5px;
+    font-size: 18px;
+    background-color: #FE3C72; /* Tinder's pink-red */
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #E52965; /* Darker shade for hover */
+  }
+  
+  #options button, #date-options button {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    background-color: #FE3C72;
+    border-radius: 25px;
+  }
+  
+  #options button:hover, #date-options button:hover {
+    background-color: #E52965;
+  }
+  
+  .correct {
+    background-color: #27AE60 !important; /* Green for correct answer */
+  }
+  
+  .incorrect {
+    background-color: #E74C3C !important; /* Red for incorrect answer */
+  }
+  
+  #result {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  #total {
+    font-size: 22px;
+    margin-top: 30px;
+  }
+  
+  #joker-btn {
+    background-color: #FD5462;
+    border-radius: 25px;
+  }
+  
+  #joker-btn:hover {
+    background-color: #E52965;
+  }
+  
+  @media (max-width: 600px) {
+    h1, h2, h3 {
+      font-size: 24px;
+    }
+    
+    button {
+      font-size: 16px;
+    }
+  }
+  
